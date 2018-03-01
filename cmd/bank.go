@@ -22,6 +22,7 @@ package cmd
 
 import (
 	"fmt"
+
 	"github.com/atotto/clipboard"
 	"github.com/mritd/idgen/generator"
 
