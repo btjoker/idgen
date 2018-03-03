@@ -27,10 +27,11 @@ import (
 
 // 生成姓名
 func NameGenerate() string {
-	return metadata.LastName[util.RandInt(0, len(metadata.LastName))] + util.GenRandomLengthChineseChars(1, 3)
-}
-
-// 生成带有生僻字的姓名
-func NameGenerateOdd() string {
-	return metadata.LastName[util.RandInt(0, len(metadata.LastName))] + util.GenOneOddChar()
+	if util.DBExist() {
+		var firstName string
+		util.CheckAndExit(util.DB().QueryRow(util.FirstNameSQL, util.RandInt(0, util.FirstNameSum)).Scan(&firstName))
+		return metadata.LastName[util.RandInt(0, len(metadata.LastName))] + firstName
+	} else {
+		return metadata.LastName[util.RandInt(0, len(metadata.LastName))] + util.GenRandomLengthChineseChars(1, 3)
+	}
 }

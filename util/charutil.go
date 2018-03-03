@@ -21,39 +21,27 @@
 package util
 
 import (
-	"github.com/mritd/idgen/metadata"
 	"math/rand"
 	"time"
+	//"github.com/rakyll/statik/fs"
+	"bytes"
 )
-
-// 随机单个中文字符
-func GenOneChineseChars() string {
-	return metadata.ChineseChars[RandInt(0, len(metadata.ChineseChars))]
-}
-
-// 随机单个复杂中文字符
-func GenOneOddChar() string {
-	rand.Seed(time.Now().UnixNano())
-	return string([]rune(metadata.OddChineseChars)[rand.Intn(len([]rune(metadata.OddChineseChars)))])
-}
 
 // 指定长度随机中文字符(包含复杂字符)
 func GenFixedLengthChineseChars(length int) string {
-	strRune := make([]rune, length)
-	for i := range strRune {
-		strRune[i] = rune(RandInt(19968, 40869))
+
+	var buf bytes.Buffer
+
+	for i := 0; i < length; i++ {
+		buf.WriteRune(rune(RandInt(19968, 40869)))
 	}
-	return string(strRune)
+	return buf.String()
 }
 
 // 指定范围随机中文字符
 func GenRandomLengthChineseChars(start, end int) string {
 	length := RandInt(start, end)
-	tmp := ""
-	for i := 0; i < length; i++ {
-		tmp += GenOneChineseChars()
-	}
-	return tmp
+	return GenFixedLengthChineseChars(length)
 }
 
 // 随机英文小写字母
@@ -76,6 +64,15 @@ func RandInt(min, max int) int {
 func RandInt64(min, max int64) int64 {
 	rand.Seed(time.Now().UnixNano())
 	return min + rand.Int63n(max-min)
+}
+
+// 反转字符串
+func ReverseString(s string) string {
+	runes := []rune(s)
+	for from, to := 0, len(runes)-1; from < to; from, to = from+1, to-1 {
+		runes[from], runes[to] = runes[to], runes[from]
+	}
+	return string(runes)
 }
 
 // CardBin Metadata 生成(仅供测试生成代码)
